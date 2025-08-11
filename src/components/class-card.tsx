@@ -20,11 +20,13 @@ export function ClassCard({ subject, timeLabel, liveStreamUrl, startTime, endTim
   useEffect(() => {
     const checkTime = () => {
       try {
-        const now = new Date();
+        // Get current date and time in UTC
+        const nowInUtc = new Date(new Date().toISOString());
+        
         const start = new Date(startTime);
         const end = new Date(endTime);
         
-        const isCurrentlyLive = isWithinInterval(now, { start, end });
+        const isCurrentlyLive = isWithinInterval(nowInUtc, { start, end });
 
         if (isCurrentlyLive !== isLive) {
           setIsLive(isCurrentlyLive);
