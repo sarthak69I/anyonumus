@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Video } from 'lucide-react';
-import { toZonedTime, format } from 'date-fns-tz';
 import { isWithinInterval } from 'date-fns';
 
 interface ClassCardProps {
@@ -21,15 +20,11 @@ export function ClassCard({ subject, timeLabel, liveStreamUrl, startTime, endTim
   useEffect(() => {
     const checkTime = () => {
       try {
-        const timeZone = 'Asia/Kolkata';
-        
         const now = new Date();
-        const zonedNow = toZonedTime(now, timeZone);
-        
         const start = new Date(startTime);
         const end = new Date(endTime);
         
-        const isCurrentlyLive = isWithinInterval(zonedNow, { start, end });
+        const isCurrentlyLive = isWithinInterval(now, { start, end });
 
         if (isCurrentlyLive !== isLive) {
           setIsLive(isCurrentlyLive);
