@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Video } from 'lucide-react';
+import { toZonedTime, format } from 'date-fns-tz';
+import { isWithinInterval } from 'date-fns';
 
 interface ClassCardProps {
   subject: string;
@@ -18,22 +20,22 @@ export function ClassCard({ subject, timeLabel, liveStreamUrl, startTime, endTim
   
   useEffect(() => {
     const checkTime = () => {
-      // The API provides times in IST (Asia/Kolkata). We need to ensure comparisons
-      // are made against the current time in the same timezone.
-      
-      // Get the current date and time in the 'Asia/Kolkata' timezone.
-      const nowInIST = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
-      
-      // The API returns a full ISO string like "2024-08-01T20:00:00.000Z", which is UTC.
-      // We'll parse these as UTC dates.
-      const start = new Date(startTime);
-      const end = new Date(endTime);
-      
-      // isLive should be true if the current time in IST is between the start and end times.
-      const isCurrentlyLive = nowInIST >= start && nowInIST <= end;
+      try {
+        const timeZone = 'Asia/Kolkata';
+        
+        const now = new Date();
+        const zonedNow = toZonedTime(now, timeZone);
+        
+        const start = new Date(startTime);
+        const end = new Date(endTime);
+        
+        const isCurrentlyLive = isWithinInterval(zonedNow, { start, end });
 
-      if (isCurrentlyLive !== isLive) {
-        setIsLive(isCurrentlyLive);
+        if (isCurrentlyLive !== isLive) {
+          setIsLive(isCurrentlyLive);
+        }
+      } catch (error) {
+        console.error("Error checking time:", error);
       }
     };
 
