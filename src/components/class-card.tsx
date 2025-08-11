@@ -18,18 +18,20 @@ export function ClassCard({ subject, timeLabel, liveStreamUrl, startTime, endTim
   
   useEffect(() => {
     const checkTime = () => {
-      // The times from the API are in 'Asia/Kolkata' (IST) time zone.
-      // We need to parse them correctly.
-      const now = new Date();
+      // The API provides times in IST (Asia/Kolkata). We need to ensure comparisons
+      // are made against the current time in the same timezone.
       
-      // Since the API doesn't provide a timezone offset, and assuming it's IST (GMT+5:30),
-      // we append the offset to treat the date correctly.
-      // The API gives strings like "2024-08-01T20:00:00.000Z" which is already UTC.
-      // new Date() will correctly parse this as UTC.
+      // Get the current date and time in the 'Asia/Kolkata' timezone.
+      const nowInIST = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+      
+      // The API returns a full ISO string like "2024-08-01T20:00:00.000Z", which is UTC.
+      // We'll parse these as UTC dates.
       const start = new Date(startTime);
       const end = new Date(endTime);
       
-      const isCurrentlyLive = now >= start && now <= end;
+      // isLive should be true if the current time in IST is between the start and end times.
+      const isCurrentlyLive = nowInIST >= start && nowInIST <= end;
+
       if (isCurrentlyLive !== isLive) {
         setIsLive(isCurrentlyLive);
       }
