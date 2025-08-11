@@ -14,7 +14,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://livedatanexttopper.vercel.app/api/live');
+        const response = await fetch('https://livedatanexttopper.vercel.app/api/live/eleak');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
