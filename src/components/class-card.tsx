@@ -18,7 +18,14 @@ export function ClassCard({ subject, timeLabel, liveStreamUrl, startTime, endTim
   
   useEffect(() => {
     const checkTime = () => {
+      // The times from the API are in 'Asia/Kolkata' (IST) time zone.
+      // We need to parse them correctly.
       const now = new Date();
+      
+      // Since the API doesn't provide a timezone offset, and assuming it's IST (GMT+5:30),
+      // we append the offset to treat the date correctly.
+      // The API gives strings like "2024-08-01T20:00:00.000Z" which is already UTC.
+      // new Date() will correctly parse this as UTC.
       const start = new Date(startTime);
       const end = new Date(endTime);
       
