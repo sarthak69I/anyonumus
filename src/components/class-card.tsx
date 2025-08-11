@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Video } from 'lucide-react';
+import { isClassLive } from '@/lib/time';
 
 interface ClassCardProps {
   subject: string;
@@ -18,30 +19,15 @@ export function ClassCard({ subject, timeLabel, liveStreamUrl, startTime, endTim
   
   useEffect(() => {
     const checkTime = () => {
-      try {
-        const now = new Date();
-        const start = new Date(startTime);
-        const end = new Date(endTime);
-
-        const isCurrentlyLive = now.getTime() >= start.getTime() && now.getTime() <= end.getTime();
-
-        if (isCurrentlyLive !== isLive) {
-          setIsLive(isCurrentlyLive);
-        }
-      } catch (error) {
-        console.error("Error checking time:", error);
-        // If there's an error, assume not live
-        if (isLive) {
-          setIsLive(false);
-        }
+      const currentlyLive = isClassLive(startTime, endTime);
+      if (currentlyLive !== isLive) {
+        setIsLive(currentlyLive);
       }
     };
 
-    // Run check immediately and then every second
     checkTime(); 
     const interval = setInterval(checkTime, 1000); 
 
-    // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, [startTime, endTime, isLive]);
 
