@@ -63,8 +63,9 @@ export function ClassCard({ subject, timeLabel, liveStreamUrl, startTime, endTim
   );
 
   if (isLive) {
+    const playerUrl = `https://studyverse-network.netlify.app/next-toppers?url=${liveStreamUrl}`;
     return (
-      <a href={liveStreamUrl} target="_blank" rel="noopener noreferrer" className="no-underline text-inherit transform hover:-translate-y-1 transition-transform duration-300 outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background rounded-lg">
+      <a href={playerUrl} target="_blank" rel="noopener noreferrer" className="no-underline text-inherit transform hover:-translate-y-1 transition-transform duration-300 outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background rounded-lg">
         {CardContent}
       </a>
     );
@@ -76,3 +77,4 @@ export function ClassCard({ subject, timeLabel, liveStreamUrl, startTime, endTim
     </div>
   );
 }
+
